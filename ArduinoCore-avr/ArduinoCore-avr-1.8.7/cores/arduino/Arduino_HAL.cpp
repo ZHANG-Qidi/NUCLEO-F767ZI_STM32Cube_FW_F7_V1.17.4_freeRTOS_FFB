@@ -78,13 +78,13 @@ void analogWrite(uint8_t pin, int val) {
 
     switch (pin) {
         case 0:
-            __HAL_TIM_SET_COMPARE(g_htim, TIM_CHANNEL_1, duty);
+            __HAL_TIM_SET_COMPARE(g_htim, g_TIM_CHANNEL_U, duty);
             break;
         case 1:
-            __HAL_TIM_SET_COMPARE(g_htim, TIM_CHANNEL_2, duty);
+            __HAL_TIM_SET_COMPARE(g_htim, g_TIM_CHANNEL_V, duty);
             break;
         case 2:
-            __HAL_TIM_SET_COMPARE(g_htim, TIM_CHANNEL_3, duty);
+            __HAL_TIM_SET_COMPARE(g_htim, g_TIM_CHANNEL_W, duty);
             break;
         default:
             break;
