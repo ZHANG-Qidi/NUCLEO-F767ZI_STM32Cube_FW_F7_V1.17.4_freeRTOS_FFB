@@ -33,6 +33,7 @@ enable_language(C ASM)
 add_subdirectory(ArduinoCore-avr/ArduinoCore-avr-1.8.7)
 add_subdirectory(Arduino-FOC/Arduino-FOC-2.2)
 add_subdirectory(TinyUSB/tinyusb-0.20.0)
+add_subdirectory(HID_FFB/HID_FFB_0.0.1)
 
 add_library(freertos_headers INTERFACE)
 target_include_directories(freertos_headers INTERFACE
@@ -74,13 +75,6 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Src/freertos.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/ffb_setup.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/ffb_loop.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/foc_setup.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/foc_loop.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/usb_setup.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/usb_loop.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/Src/wheel_registry.c
 
     # Add user sources here
 )
@@ -105,8 +99,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     stm32cubemx
 
     # Add user defined libraries
-    arduino_core
-    arduino_foc
     freertos_kernel
-    tinyusb
+    hid_ffb
 )
