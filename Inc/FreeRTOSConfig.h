@@ -58,6 +58,7 @@ extern uint32_t SystemCoreClock;
 }
 #endif
 #endif
+
 #define configENABLE_FPU 0
 #define configENABLE_MPU 0
 
