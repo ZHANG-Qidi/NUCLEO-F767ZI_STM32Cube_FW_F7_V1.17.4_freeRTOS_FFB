@@ -166,12 +166,6 @@ standard names. */
 
 /* USER CODE BEGIN Defines */
 /* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
-/* USER CODE END Defines */
-
-#endif /* FREERTOS_CONFIG_H */
-
-/* USER CODE BEGIN Defines */
-/* Section where parameter definitions can be added (for instance, to override default ones in FreeRTOS.h) */
 /* Set configENABLE_TRUSTZONE to 1 when running FreeRTOS on the non-secure side
  * to enable the TrustZone support in FreeRTOS ARMv8-M ports which allows the
  * non-secure FreeRTOS tasks to call the (non-secure callable) functions
@@ -235,3 +229,5 @@ typedef enum {
     osPriorityReserved = 0x7FFFFFFF,  ///< Prevents enum down-size compiler optimization.
 } osPriority_t;
 /* USER CODE END Defines */
+
+#endif /* FREERTOS_CONFIG_H */
