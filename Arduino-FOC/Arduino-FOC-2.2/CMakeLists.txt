@@ -11,6 +11,7 @@ target_include_directories(arduino_foc PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
-target_link_libraries(arduino_foc PUBLIC
+target_link_libraries(arduino_foc PRIVATE
+    stm32cubemx
     arduino_core
 )

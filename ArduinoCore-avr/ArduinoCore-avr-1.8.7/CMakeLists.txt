@@ -11,9 +11,8 @@ target_include_directories(arduino_core PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/cores/arduino
     ${CMAKE_CURRENT_LIST_DIR}/libraries/Wire/src
     ${CMAKE_CURRENT_LIST_DIR}/libraries/SPI/src
-    ${CMAKE_SOURCE_DIR}
 )
 
-target_link_libraries(arduino_core PUBLIC
+target_link_libraries(arduino_core PRIVATE
     stm32cubemx
 )

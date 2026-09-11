@@ -11,7 +11,7 @@ target_include_directories(hid_ffb PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/src
 )
 
-target_link_libraries(hid_ffb PUBLIC
+target_link_libraries(hid_ffb PRIVATE
     arduino_core
     arduino_foc
     freertos_kernel

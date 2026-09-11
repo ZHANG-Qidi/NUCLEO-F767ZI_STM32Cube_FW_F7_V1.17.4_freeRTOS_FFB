@@ -4,7 +4,6 @@
 #include "esp_log.h"
 #include "ffb_loop.h"
 #include "foc_setup.h"
-#include "freertos_port.h"
 // static const char *TAG = "foc_loop";
 static float wheel_rad_g;
 void foc_output(float *wheel_rad) { *wheel_rad = wheel_rad_g; }
