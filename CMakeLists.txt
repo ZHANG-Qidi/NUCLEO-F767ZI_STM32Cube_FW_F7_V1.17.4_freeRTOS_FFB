@@ -32,7 +32,7 @@ enable_language(C ASM)
 
 add_subdirectory(ArduinoCore-avr/ArduinoCore-avr-1.8.7)
 add_subdirectory(Arduino-FOC/Arduino-FOC-2.2)
-add_subdirectory(TinyUSB/tinyusb-0.20.0)
+add_subdirectory(TinyUSB/tinyusb-0.21.0)
 add_subdirectory(HID-FFB/HID-FFB-0.1)
 
 add_library(freertos_headers INTERFACE)
