@@ -2,6 +2,7 @@
 
 #include "bsp/board_api.h"
 #include "hidReportDesc.h"
+#include "stm32f7xx_hal.h"
 #include "tusb.h"
 #include "wheel_registry.h"
 //--------------------------------------------------------------------+
@@ -73,16 +74,15 @@ char const *string_desc_arr[] = {
     "TinyUSB Device",            // 2: Product
     NULL,                        // 3: Serials will use unique ID if possible
 };
-//--------------------------------------------------------------------+
-// Weak board API (to be optionally implemented by board)
-//--------------------------------------------------------------------+
-TU_ATTR_WEAK size_t board_get_unique_id(uint8_t id[], size_t max_len) {
+size_t board_get_unique_id(uint8_t id[], size_t max_len) {
     (void)max_len;
-    // fixed serial string is 01234567889ABCDEF
-    uint32_t *uid32 = (uint32_t *)(uintptr_t)id;
-    uid32[0] = 0x67452301u;
-    uid32[1] = 0xEFCDAB89u;
-    return 8;
+    volatile uint32_t *stm32_uuid = (volatile uint32_t *)UID_BASE;
+    uint32_t *id32 = (uint32_t *)(uintptr_t)id;
+    const uint8_t len = 12;
+    id32[0] = stm32_uuid[0];
+    id32[1] = stm32_uuid[1];
+    id32[2] = stm32_uuid[2];
+    return len;
 }
 static uint16_t _desc_str[32 + 1];
 // Invoked when received GET STRING DESCRIPTOR request
