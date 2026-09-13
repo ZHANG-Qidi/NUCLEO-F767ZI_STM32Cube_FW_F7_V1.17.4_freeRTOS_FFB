@@ -9,6 +9,10 @@ extern "C" {
 #define VOLTAGE_LIMIT (6.0f)
 #define VOLTAGE_SENSOR_ALIGN (1.0f)
 #define COMMANDER_BAUD_RATE (115200)
+#define MOTOR_U (0)
+#define MOTOR_V (1)
+#define MOTOR_W (2)
+#define MOTOR_EN (PIN("F", 14))
 extern BLDCMotor motor;
 extern MagneticSensorSPI sensor;
 extern void foc_setup(void);
