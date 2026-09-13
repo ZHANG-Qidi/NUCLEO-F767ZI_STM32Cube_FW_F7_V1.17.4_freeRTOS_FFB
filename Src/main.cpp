@@ -127,6 +127,16 @@ void ffb_task(__unused void *params) {
         vTaskDelayUntil(&last, pdMS_TO_TICKS(USB_POLLING_INTERVAL));
     }
 }
+extern "C" size_t board_get_unique_id(uint8_t id[], size_t max_len) {
+    (void)max_len;
+    volatile uint32_t *stm32_uuid = (volatile uint32_t *)UID_BASE;
+    uint32_t *id32 = (uint32_t *)(uintptr_t)id;
+    const uint8_t len = 12;
+    id32[0] = stm32_uuid[0];
+    id32[1] = stm32_uuid[1];
+    id32[2] = stm32_uuid[2];
+    return len;
+}
 /* USER CODE END 0 */
 
 /**
