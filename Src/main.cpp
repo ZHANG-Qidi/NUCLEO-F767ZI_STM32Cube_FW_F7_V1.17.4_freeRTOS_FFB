@@ -12,6 +12,8 @@
 #include "arduino_interface.h"
 #include "task.h"
 // FFB
+#include "adc_loop.h"
+#include "adc_setup.h"
 #include "ffb_loop.h"
 #include "ffb_setup.h"
 #include "foc_loop.h"
@@ -61,6 +63,8 @@ ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDecr
 
 ETH_TxPacketConfig TxConfig;
 
+ADC_HandleTypeDef hadc1;
+
 ETH_HandleTypeDef heth;
 
 I2C_HandleTypeDef hi2c1;
@@ -88,6 +92,7 @@ static void MX_TIM1_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_TIM2_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 /* USER CODE END PFP */
 
@@ -137,6 +142,14 @@ extern "C" size_t board_get_unique_id(uint8_t id[], size_t max_len) {
     id32[2] = stm32_uuid[2];
     return len;
 }
+void adc_task(__unused void *params) {
+    adc_setup();
+    TickType_t last = xTaskGetTickCount();
+    for (;;) {
+        vTaskDelayUntil(&last, pdMS_TO_TICKS(ADC_READ_INTERVAL));
+        adc_loop();
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -173,11 +186,13 @@ int main(void) {
     MX_USART3_UART_Init();
     MX_USB_OTG_FS_PCD_Init();
     MX_TIM2_Init();
+    MX_ADC1_Init();
     /* USER CODE BEGIN 2 */
     arduino_serial_init(&huart3);
     arduino_spi_init(&hspi1);
     arduino_tim_init(&htim1, TIM_CHANNEL_1, TIM_CHANNEL_2, TIM_CHANNEL_3);
     arduino_hi2c_init(&hi2c1);
+    arduino_hadc_init(&hadc1);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -186,6 +201,7 @@ int main(void) {
     xTaskCreate(foc_task, "foc_task", WORKER_TASK_STACK_SIZE, NULL, WORKER_TASK_PRIORITY, &foc_task_handle);
     xTaskCreate(usb_task, "usb_task", WORKER_TASK_STACK_SIZE, NULL, WORKER_TASK_PRIORITY, NULL);
     xTaskCreate(ffb_task, "ffb_task", WORKER_TASK_STACK_SIZE, NULL, WORKER_TASK_PRIORITY, NULL);
+    xTaskCreate(adc_task, "adc_task", WORKER_TASK_STACK_SIZE, NULL, WORKER_TASK_PRIORITY, NULL);
     HAL_TIM_Base_Start_IT(&htim2);
     vTaskStartScheduler();
     while (1) {
@@ -246,6 +262,70 @@ void SystemClock_Config(void) {
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_3) != HAL_OK) {
         Error_Handler();
     }
+}
+
+/**
+ * @brief ADC1 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_ADC1_Init(void) {
+    /* USER CODE BEGIN ADC1_Init 0 */
+
+    /* USER CODE END ADC1_Init 0 */
+
+    ADC_ChannelConfTypeDef sConfig = {0};
+
+    /* USER CODE BEGIN ADC1_Init 1 */
+
+    /* USER CODE END ADC1_Init 1 */
+
+    /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+     */
+    hadc1.Instance = ADC1;
+    hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+    hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+    hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
+    hadc1.Init.ContinuousConvMode = DISABLE;
+    hadc1.Init.DiscontinuousConvMode = ENABLE;
+    hadc1.Init.NbrOfDiscConversion = 1;
+    hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+    hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+    hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+    hadc1.Init.NbrOfConversion = 3;
+    hadc1.Init.DMAContinuousRequests = DISABLE;
+    hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+    if (HAL_ADC_Init(&hadc1) != HAL_OK) {
+        Error_Handler();
+    }
+
+    /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+     */
+    sConfig.Channel = ADC_CHANNEL_3;
+    sConfig.Rank = ADC_REGULAR_RANK_1;
+    sConfig.SamplingTime = ADC_SAMPLETIME_84CYCLES;
+    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+        Error_Handler();
+    }
+
+    /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+     */
+    sConfig.Channel = ADC_CHANNEL_10;
+    sConfig.Rank = ADC_REGULAR_RANK_2;
+    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+        Error_Handler();
+    }
+
+    /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+     */
+    sConfig.Channel = ADC_CHANNEL_13;
+    sConfig.Rank = ADC_REGULAR_RANK_3;
+    if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+        Error_Handler();
+    }
+    /* USER CODE BEGIN ADC1_Init 2 */
+
+    /* USER CODE END ADC1_Init 2 */
 }
 
 /**

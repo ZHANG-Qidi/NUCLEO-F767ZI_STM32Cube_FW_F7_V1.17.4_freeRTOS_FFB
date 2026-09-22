@@ -90,3 +90,16 @@ void analogWrite(uint8_t pin, int val) {
             break;
     }
 }
+
+void analogReference(uint8_t mode) { (void)mode; }
+
+int analogRead(uint8_t pin) {
+    static int adc_data[3];
+    for (int i = 0; i < 3; i++) {
+        HAL_ADC_Start(g_hadc);
+        HAL_ADC_PollForConversion(g_hadc, 100);
+        adc_data[i] = HAL_ADC_GetValue(g_hadc);
+    }
+    HAL_ADC_Stop(g_hadc);
+    return adc_data[pin % 3];
+}

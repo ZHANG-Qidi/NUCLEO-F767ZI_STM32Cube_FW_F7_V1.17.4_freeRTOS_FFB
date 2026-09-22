@@ -6,6 +6,7 @@ SPI_HandleTypeDef *g_hspi;
 TIM_HandleTypeDef *g_htim;
 UART_HandleTypeDef *g_huart;
 I2C_HandleTypeDef *g_hi2c;
+ADC_HandleTypeDef *g_hadc;
 
 uint64_t g_TIM_CHANNEL_U;
 uint64_t g_TIM_CHANNEL_V;
@@ -38,3 +39,5 @@ int __io_putchar(int ch) {
     HAL_UART_Transmit(g_huart, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
     return ch;
 }
+
+void arduino_hadc_init(ADC_HandleTypeDef *hadc) { g_hadc = hadc; }
