@@ -1,6 +1,8 @@
 #ifndef _ARDUINO_INTERFACE_H_
 #define _ARDUINO_INTERFACE_H_
 
+#include "Arduino_config.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,7 +25,7 @@ void arduino_tim_init(TIM_HandleTypeDef *htim, uint64_t TIM_CHANNEL_U, uint64_t 
 void arduino_hi2c_init(I2C_HandleTypeDef *hi2c);
 void arduino_hadc_init(ADC_HandleTypeDef *hadc);
 
-#define SPI_MASTER_CS_IO (PIN("D", 14))
+#define SPI_MASTER_CS_IO (CONFIG_ARDUINO_SPI_CS0)
 
 #ifdef __cplusplus
 }
